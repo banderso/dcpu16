@@ -1,0 +1,6 @@
+(ns tzimtzum.test.core
+  (:use [tzimtzum.core])
+  (:use [clojure.test]))
+
+(deftest replace-me ;; FIXME: write
+  (is false "No tests have been written."))
