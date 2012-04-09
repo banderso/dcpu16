@@ -1,5 +1,7 @@
 (ns tzimtzum.core)
 
+;;; TODO: fix interaction between POP and JSR
+
 (defonce op-mask (int 0xF))
 (defonce op-val-mask (int 0x3F))
 (defonce alt-op-mask (int 0x3F))
@@ -44,7 +46,7 @@
 (defn speek [dcpu oprnd] (assoc dcpu oprnd [:m (:sp dcpu)]))
 (defn spush [dcpu oprnd] (assoc dcpu
                            oprnd [:m (:sp dcpu)]
-                           :sp (dec (:sp dcpu))))
+                           :sp (int (dec (:sp dcpu)))))
 (defn sp [dcpu oprnd] (assoc dcpu oprnd [:sp]))
 (defn pc [dcpu oprnd] (assoc dcpu oprnd [:pc]))
 (defn ov [dcpu oprnd] (assoc dcpu oprnd [:ov]))
@@ -152,7 +154,7 @@
   (let [op (aget (:m dcpu) (:pc dcpu))]
     (assoc dcpu :pc (int (+ 1 (:pc dcpu)
                             (aget skiptable (bit-shift-right op 10))
-                            (if (= (bit-and op op-mask))
+                            (if (= (bit-and op op-mask) 0)
                               (aget skiptable (bit-and (bit-shift-right op 4) 0x1F))
                               0))))))
 
@@ -177,6 +179,7 @@
   (let [spval (mem-load dcpu [:sp])
         pcval (mem-load dcpu [:pc])
         aval (mem-load dcpu a)]
+    (prn (map #(format "%04x" %) [spval pcval aval]))
     (-> dcpu
         (mem-store [:m spval] pcval)
         (mem-store [:sp] (dec spval))
@@ -219,7 +222,7 @@
 
 (defn print-dcpu [dcpu]
   (let [{:keys [pc sp ov r m]} dcpu]
-    (prn (apply str (map #(format "0x%04x " %) [pc sp ov (aget r 0) (aget r 1) (aget r 2) (aget r 3) (aget r 4) (aget r 5) (aget r 6) (aget r 7) (aget m pc)])))))
+    (prn (apply str (map #(format "%04x " %) [pc sp ov (aget r 0) (aget r 1) (aget r 2) (aget r 3) (aget r 4) (aget r 5) (aget r 6) (aget r 7) (aget m pc)])))))
 
 (defn run-program [dcpu]
   (do (print-header)
