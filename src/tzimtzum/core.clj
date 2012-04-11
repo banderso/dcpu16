@@ -44,9 +44,9 @@
                           oprnd [:m (:sp dcpu)]
                           :sp (int (inc (:sp dcpu)))))
 (defn speek [dcpu oprnd] (assoc dcpu oprnd [:m (:sp dcpu)]))
-(defn spush [dcpu oprnd] (assoc dcpu
-                           oprnd [:m (:sp dcpu)]
-                           :sp (int (dec (:sp dcpu)))))
+(defn spush [dcpu oprnd]
+  (let [sp (int (dec (:sp dcpu)))]
+    (assoc dcpu oprnd [:m sp] :sp sp)))
 (defn sp [dcpu oprnd] (assoc dcpu oprnd [:sp]))
 (defn pc [dcpu oprnd] (assoc dcpu oprnd [:pc]))
 (defn ov [dcpu oprnd] (assoc dcpu oprnd [:ov]))
@@ -176,13 +176,13 @@
     (if (= (bit-and aval bval) 0) (skip dcpu) dcpu)))
 
 (defn jsr [dcpu a]
-  (let [spval (mem-load dcpu [:sp])
+  (let [spval (dec (mem-load dcpu [:sp]))
         pcval (mem-load dcpu [:pc])
         aval (mem-load dcpu a)]
     (prn (map #(format "%04x" %) [spval pcval aval]))
     (-> dcpu
         (mem-store [:m spval] pcval)
-        (mem-store [:sp] (dec spval))
+        (mem-store [:sp] spval)
         (mem-store [:pc] aval))))
 
 (defn step [dcpu]
