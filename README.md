@@ -4,9 +4,10 @@ A Clojure implementation of Notch's DCPU-16. Basically an interpretation of [swe
 
 ## Usage
 
-   (program-load *dcpu* program)
-   (run-program *dcpu*)
-
+```clj
+(program-load *dcpu* program)
+(run-program *dcpu*)
+```
 ## License
 
 Copyright (C) 2012 Benjamin Anderson
