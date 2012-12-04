@@ -1,4 +1,4 @@
-(ns tzimtzum.core)
+(ns dcpu16.core)
 
 ;;; TODO: fix interaction between POP and JSR
 

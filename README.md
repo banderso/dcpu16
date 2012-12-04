@@ -1,4 +1,4 @@
-# tzimtzum
+# dcpu16
 
 A Clojure implementation of Notch's DCPU-16. Basically an interpretation of [swetland's](https://github.com/swetland/dcpu16) C version.
 
